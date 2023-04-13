@@ -1,6 +1,6 @@
 import { client } from "./db";
 import bcrypt from 'bcryptjs';
-import { createSubject } from "./queries";
+import { createSubject, findEmail } from "./queries";
 import jwt from 'jsonwebtoken';
 import { getUserByEmail } from "./queries";
 import { createToken, validEmail, validPassword } from "./validation";
@@ -40,7 +40,7 @@ export const login = async (req:any,res:any) => {
  export const forgotPassword = async (req:any,res:any) => {
   try{
     const {email} = req.body
-    const data = await client.query('SELECT email,password from users3 WHERE email = $1',[email])
+    const data = await client.query(findEmail,[email])
     const user = data.rows[0]
 
     if(!validEmail(email)) {
