@@ -1,29 +1,39 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addSubject = exports.forgotPassword = exports.login = void 0;
+exports.addItem = exports.login = exports.signUp = void 0;
 const db_1 = require("./db");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const queries_1 = require("./queries");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const queries_2 = require("./queries");
 const validation_1 = require("./validation");
-const mail_1 = require("./mail");
-const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+//         const passwordMatch = await bcrypt.compare(password,user.password) 
+const signUp = async (req, res) => {
+    try {
+        const { name, email, password } = req.body;
+        const hashedPassword = await bcryptjs_1.default.hash(password, 10);
+        if (!validation_1.validEmail) {
+            res.send('email not valid');
+        }
+        if (!validation_1.validPassword) {
+            res.send('password must be at least 8 characters');
+        }
+        db_1.client.query(queries_1.createUser, [name, email, hashedPassword]);
+        res.send(`user '${name}' created!`);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).send('internal server error');
+    }
+};
+exports.signUp = signUp;
+const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-        const result = yield db_1.client.query(queries_2.getUserByEmail, [email]);
+        const result = await db_1.client.query(queries_2.getUserByEmail, [email]);
         const user = result.rows[0];
         if (!(0, validation_1.validEmail)(email)) {
             res.status(400).send('email not valid');
@@ -35,7 +45,7 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             res.send('no user with this email');
         }
         if (user) {
-            const passwordMatch = yield bcryptjs_1.default.compare(password, user.password);
+            const passwordMatch = await bcryptjs_1.default.compare(password, user.password);
             if (passwordMatch) {
                 const token = (0, validation_1.createToken)(email);
                 res.send("login succesful");
@@ -49,46 +59,35 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     catch (err) {
         res.status(500).send('internal server error');
     }
-});
+};
 exports.login = login;
-const forgotPassword = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
+const addItem = async (req, res) => {
     try {
-        const { email } = request.body;
-        const data = yield db_1.client.query('SELECT email,password from users3 WHERE email = $1', [email]);
-        const user = data.rows[0];
-        if (!(0, validation_1.validEmail)(email)) {
-            response.status(400).send('email not valid!');
-        }
-        if (user.email == email) {
-            console.log(mail_1.mail);
-            //   sgMail.send(mail)
-            //   .then(() => {
-            //     console.log('email sent succesfully')
-            //     response.status(200).send('email sent succesfully')
-            //   }) 
-        }
-    }
-    catch (err) {
-        console.log(err);
-        response.status(500).send('no such email in database');
-    }
-});
-exports.forgotPassword = forgotPassword;
-const addSubject = (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { token, subject } = request.body;
+        const { token, productname, productdescription, productprice, productcategory, productimage } = req.body;
         const verified = jsonwebtoken_1.default.verify(token, 'secretpassword');
         if (verified) {
-            db_1.client.query(queries_1.createSubject, [subject]);
-            response.send(`${subject} added to subjects`);
+            db_1.client.query(queries_1.createItem, [productname, productdescription, productprice, productcategory, productimage]);
+            res.send(`${productname} added to products of category ${productcategory}`);
         }
         if (!verified) {
-            response.send('user not logged in!');
+            res.send('user not logged in!');
         }
     }
     catch (err) {
         console.log(err);
-        response.status(500).send('internal sever error');
+        res.status(500).send('internal sever error');
     }
-});
-exports.addSubject = addSubject;
+};
+exports.addItem = addItem;
+// {
+//   "email":"testuser@gmail.com", 
+//   "password":"password"
+// }
+// {
+//   "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoidGVzdHVzZXJAZ21haWwuY29tIiwiaWF0IjoxNjgyNzc5NTE1fQ.VHH4lEcLiWxiOw4amDpZKQqjUKus5QrYr0DcMPi6QIY",
+//   "productname":"Galaxy Buds",
+//   "productdescription":"Noise cancellation,AKG sound",
+//   "productprice":150,
+//   "productcategory":"Earbuds",
+//   "productimage":"https://www.thesource.ca/medias/20200804113840-108089487-A.jpg-mediaConversion-640-x-480-mediaConversion-400-x-300-0?context=bWFzdGVyfGltYWdlc3wzODkzNnxpbWFnZS9qcGVnfGltYWdlcy9oMmUvaDg1LzkyODIyMjAyNjE0MDYuanBnfGFmZmRmMWNjOTRiMmQ4YTcxMTk0Yzg2NDhjMjg1NjRkNzFiYjI0NzdlMDY3ODMxMTI3MzFlZWQ0Y2UxZTM1YmM"
+// }
