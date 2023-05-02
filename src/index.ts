@@ -1,12 +1,16 @@
 import fastify from "fastify";
-import { addItem, login, signUp } from "./functions"
+import { TokenValidation } from "./middlewares/TokenValidation/TokenValidation";
+import { addItem } from "./services/AddProduct/AddProduct";
+import { signUp } from "./services/Signup/Signup";
+import { login } from "./services/Login/Login";
 
 const server = fastify({ logger: true })
 server.get('/',(req: any,res:any) => {
     res.send('working!')
 })
 server.post('/login',login)
-server.post('/additem',addItem)
+
+server.post('/additem',{preHandler : TokenValidation},addItem)
 server.post('/signup',signUp)
 
 server.listen(3000,() => {

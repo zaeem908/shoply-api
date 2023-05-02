@@ -1,0 +1,3 @@
+interface reqBody {
+  token:string
+}
