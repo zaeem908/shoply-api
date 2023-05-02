@@ -12,9 +12,44 @@ const server = (0, fastify_1.default)({ logger: true });
 server.get('/', (req, res) => {
     res.send('working!');
 });
-server.post('/login', Login_1.login);
+const loginSchema = {
+    type: 'object',
+    required: ["email", "password"],
+    properties: {
+        email: {
+            type: "string",
+            format: "email"
+        },
+        password: {
+            type: "string",
+            minLength: 8
+        }
+    }
+};
+const signupSchema = {
+    type: 'object',
+    required: ["name", "email", "password"],
+    properties: {
+        email: {
+            type: "string",
+            format: "email"
+        },
+        name: {
+            type: "string"
+        },
+        password: {
+            type: "string",
+            minLength: 8
+        }
+    }
+};
+server.post('/login', {
+    schema: {
+        body: loginSchema
+    },
+}, Login_1.login);
 server.post('/additem', { preHandler: TokenValidation_1.TokenValidation }, AddProduct_1.addItem);
-server.post('/signup', Signup_1.signUp);
+server.post('/signup', { schema: { body: signupSchema } }, Signup_1.signUp);
 server.listen(3000, () => {
     console.log('server running on port 3000');
 });

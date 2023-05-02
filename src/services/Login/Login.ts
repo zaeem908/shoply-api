@@ -2,7 +2,7 @@
 import { client } from '../../Database/db';
 import bcrypt from 'bcryptjs';
 import { FastifyReply, FastifyRequest } from "fastify";
-import { createToken, validEmail, validPassword } from '../../validation';
+import { createToken } from '../CreateToken/createToken';
 
 
 
@@ -13,12 +13,7 @@ export const login = async (req:FastifyRequest,res:FastifyReply) => {
    const {email,password}:userReqBody = req.body as userReqBody
    const result = await client.query(getUserByEmail,[email]);
    const user = result.rows[0]
-     if(!validEmail(email)) {
-        res.status(400).send('email not valid')
-     }
-     if(!validPassword(password)) {
-        res.status(400).send('password must be at least 8 characters')
-     }
+
      if(!user) {
        res.send('no user with this email')
      }

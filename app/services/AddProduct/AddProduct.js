@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.addItem = void 0;
-const db_1 = require("../../db");
+const db_1 = require("../../Database/db");
 //         const passwordMatch = await bcrypt.compare(password,user.password) 
 const addItem = async (req, res) => {
     const createItem = `INSERT INTO shoplyitems (productname,productdescription,productprice,productcategory,productimage) VALUES ($1,$2,$3,$4,$5)`;
