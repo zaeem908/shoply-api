@@ -8,48 +8,18 @@ const TokenValidation_1 = require("./middlewares/TokenValidation/TokenValidation
 const AddProduct_1 = require("./services/AddProduct/AddProduct");
 const Signup_1 = require("./services/Signup/Signup");
 const Login_1 = require("./services/Login/Login");
+const Schemas_1 = require("./services/Schemas/Schemas");
 const server = (0, fastify_1.default)({ logger: true });
 server.get('/', (req, res) => {
     res.send('working!');
 });
-const loginSchema = {
-    type: 'object',
-    required: ["email", "password"],
-    properties: {
-        email: {
-            type: "string",
-            format: "email"
-        },
-        password: {
-            type: "string",
-            minLength: 8
-        }
-    }
-};
-const signupSchema = {
-    type: 'object',
-    required: ["name", "email", "password"],
-    properties: {
-        email: {
-            type: "string",
-            format: "email"
-        },
-        name: {
-            type: "string"
-        },
-        password: {
-            type: "string",
-            minLength: 8
-        }
-    }
-};
 server.post('/login', {
     schema: {
-        body: loginSchema
+        body: Schemas_1.loginSchema
     },
 }, Login_1.login);
 server.post('/additem', { preHandler: TokenValidation_1.TokenValidation }, AddProduct_1.addItem);
-server.post('/signup', { schema: { body: signupSchema } }, Signup_1.signUp);
+server.post('/signup', { schema: { body: Schemas_1.signupSchema } }, Signup_1.signUp);
 server.listen(3000, () => {
     console.log('server running on port 3000');
 });

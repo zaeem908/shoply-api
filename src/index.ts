@@ -3,42 +3,13 @@ import { TokenValidation } from "./middlewares/TokenValidation/TokenValidation";
 import { addItem } from "./services/AddProduct/AddProduct";
 import { signUp } from "./services/Signup/Signup";
 import { login } from "./services/Login/Login";
+import { loginSchema, signupSchema } from "./services/Schemas/Schemas";
 
 const server = fastify({ logger: true })
 server.get('/',(req: any,res:any) => {
     res.send('working!')
 })
-const loginSchema = {
-  type: 'object',
-  required: ["email","password"],
-  properties: {
-    email: {
-      type: "string",
-      format: "email"
-    },
-    password: {
-      type: "string",
-      minLength:8
-    }
-  }
-}
-const signupSchema = {
-  type: 'object',
-  required: ["name","email","password"],
-  properties: {
-    email: {
-      type: "string",
-      format: "email"
-    },
-    name: {
-      type: "string"
-    },
-    password: {
-      type: "string",
-      minLength:8
-    }
-  }
-}
+
 
 server.post('/login',  {
   schema: {
