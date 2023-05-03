@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.addItem = void 0;
+exports.addProduct = void 0;
 const db_1 = require("../../Database/db");
-const addItem = async (req, res) => {
+const addProduct = async (req, res) => {
     const createItem = `INSERT INTO shoplyitems2 (name,description,price,category,image) VALUES ($1,$2,$3,$4,$5)`;
     try {
         const { name, description, price, category, image } = req.body;
@@ -22,4 +22,4 @@ const addItem = async (req, res) => {
         console.log(err);
     }
 };
-exports.addItem = addItem;
+exports.addProduct = addProduct;

@@ -4,22 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const fastify_1 = __importDefault(require("fastify"));
-const TokenValidation_1 = require("./middlewares/TokenValidation/TokenValidation");
-const AddProduct_1 = require("./services/AddProduct/AddProduct");
-const Signup_1 = require("./services/Signup/Signup");
-const Login_1 = require("./services/Login/Login");
-const Schemas_1 = require("./services/Schemas/Schemas");
+const index_1 = __importDefault(require("./Routes/index"));
 const server = (0, fastify_1.default)({ logger: true });
-server.get('/', (req, res) => {
-    res.send('working!');
-});
-server.post('/login', {
-    schema: {
-        body: Schemas_1.loginSchema
-    },
-}, Login_1.login);
-server.post('/additem', { preHandler: TokenValidation_1.TokenValidation }, AddProduct_1.addItem);
-server.post('/signup', { schema: { body: Schemas_1.signupSchema } }, Signup_1.signUp);
+server.register(index_1.default);
 server.listen(3000, () => {
-    console.log('server running on port 3000');
+    console.log("server running on port 3000");
 });

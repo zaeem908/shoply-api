@@ -14,7 +14,7 @@ const login = async (req, res) => {
         const result = await db_1.client.query(getUserByEmail, [email]);
         const user = result.rows[0];
         if (!user) {
-            res.send('no user with this email');
+            res.send("no user with this email");
         }
         if (user) {
             const passwordMatch = await bcryptjs_1.default.compare(password, user.password);
@@ -24,18 +24,18 @@ const login = async (req, res) => {
                 console.log(token);
             }
             else {
-                res.status(400).send('password not matched');
+                res.status(400).send("password not matched");
             }
         }
     }
     catch (err) {
-        res.status(500).send('internal server error');
+        res.status(500).send("internal server error");
     }
 };
 exports.login = login;
 ///////////////////// testing /////////////////////
 // {
-//   "email":"testuser@gmail.com", 
+//   "email":"testuser@gmail.com",
 //   "password":"password"
 // }
 // {
