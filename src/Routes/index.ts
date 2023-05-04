@@ -1,8 +1,8 @@
 import { FastifyInstance } from "fastify";
 import { addProduct } from "../services/Products";
-import { signUp } from "../services/Signup/Signup";
-import { loginSchema, signupSchema } from "../services/Schemas/Schemas";
-import { login } from "../services/Login/Login";
+import { signUp } from "../services/Signup";
+import { login } from "../services/Login";
+import { loginSchema, signupSchema } from "../services/Schemas";
 import { isLogin } from "../middlewares/authValidation";
 
 export default async function routes(fastify: FastifyInstance) {

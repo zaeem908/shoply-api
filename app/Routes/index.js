@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Products_1 = require("../services/Products");
-const Signup_1 = require("../services/Signup/Signup");
-const Schemas_1 = require("../services/Schemas/Schemas");
-const Login_1 = require("../services/Login/Login");
+const Signup_1 = require("../services/Signup");
+const Login_1 = require("../services/Login");
+const Schemas_1 = require("../services/Schemas");
 const authValidation_1 = require("../middlewares/authValidation");
 async function routes(fastify) {
     fastify.get("/", (req, res) => {

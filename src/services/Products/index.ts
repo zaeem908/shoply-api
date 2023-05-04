@@ -1,4 +1,4 @@
-import { client } from "../../Database/db";
+import { client } from "../../Database";
 import { FastifyReply, FastifyRequest } from "fastify";
 
 export const addProduct = async (req: FastifyRequest, res: FastifyReply) => {
