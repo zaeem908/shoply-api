@@ -6,12 +6,12 @@ import { loginSchema, signupSchema } from "../services/Schemas";
 import { isLogin } from "../middlewares/authValidation";
 
 export default async function routes(fastify: FastifyInstance) {
-  fastify.get("/v1/home", (req: any, res: any) => {
+  fastify.get("/api/v1/home", (req: any, res: any) => {
     res.send("working!");
   });
 
   fastify.post(
-    "/v1/login",
+    "/api/v1/login",
     {
       schema: {
         body: loginSchema,
@@ -20,8 +20,8 @@ export default async function routes(fastify: FastifyInstance) {
     login
   );
 
-  fastify.post("/v1/additems", { preHandler: isLogin }, addProduct);
-  fastify.post("/v1/signup", { schema: { body: signupSchema } }, signUp);
-  fastify.post("/v1/products", { preHandler: isLogin }, allProducts);
-  fastify.post("/v1/categories", { preHandler: isLogin }, categories);
+  fastify.post("/api/v1/additems", { preHandler: isLogin }, addProduct);
+  fastify.post("/api/v1/signup", { schema: { body: signupSchema } }, signUp);
+  fastify.post("/api/v1/products", { preHandler: isLogin }, allProducts);
+  fastify.post("/api/v1/categories", { preHandler: isLogin }, categories);
 }
