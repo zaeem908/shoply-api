@@ -7,7 +7,7 @@ exports.createToken = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 async function createToken(data) {
     try {
-        const token = jsonwebtoken_1.default.sign({ data: data }, "secretpassword");
+        const token = jsonwebtoken_1.default.sign({ email: data }, "secretpassword");
         return token;
     }
     catch (err) {
