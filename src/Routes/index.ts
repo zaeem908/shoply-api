@@ -1,10 +1,15 @@
 import { FastifyInstance } from "fastify";
-import { addProduct, allProducts, categories } from "../services/Products";
+import {
+  addProduct,
+  addToCart,
+  allProducts,
+  categories,
+} from "../services/Products";
 import { signUp } from "../services/Signup";
 import { login } from "../services/Login";
 import { loginSchema, signupSchema } from "../services/Schemas";
 import { isLogin } from "../middlewares/authValidation";
-import { addToCart, cart, incrementItemQty } from "../services/Cart";
+import { cart, incrementItemQty } from "../services/Cart";
 
 export default async function routes(fastify: FastifyInstance) {
   fastify.get("/api/v1/home", (req: any, res: any) => {
